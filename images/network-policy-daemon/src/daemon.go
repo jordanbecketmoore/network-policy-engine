@@ -51,4 +51,18 @@ func main() {
 	for _, ns := range namespaces.Items {
 		fmt.Println(ns.Name)
 	}
+
+	// get list of network pollicies in each namespace
+	netpols, err := clientset.NetworkingV1().NetworkPolicies("default").List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		panic(err.Error())
+	}
+
+	// print list of default network policies
+	for _, namespace := range namespaces.Items {
+		fmt.Printf("All NetworkPolicies in the '%s' Namespace:\n", namespace.Name)
+		for _, netpol := range netpols.Items {
+			fmt.Printf("Network Policy: %s\n", netpol.Name)
+		}
+	}
 }
